@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Form Responses</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .header {
+            margin-bottom: 20px;
+        }
+        .error {
+            color: #d32f2f;
+            background-color: #ffebee;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .info {
+            color: #1976d2;
+            background-color: #e3f2fd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+        }
+        .empty-state {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin: 40px 0;
+        }
+        .submitted-at {
+            white-space: nowrap;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Google Form Responses</h1>
+        {% if form_id %}
+            <p><strong>Form ID:</strong> {{ form_id }}</p>
+        {% endif %}
+    </div>
+
+    {% if error %}
+        <div class="error">
+            <strong>Error:</strong> {{ error }}
+        </div>
+    {% endif %}
+
+    {% if not responses %}
+        <div class="empty-state">
+            <p>No form responses available.</p>
+            {% if not error %}
+                <p>This could mean:</p>
+                <ul style="text-align: left; display: inline-block;">
+                    <li>The form has no responses yet</li>
+                    <li>The form ID is incorrect</li>
+                    <li>The service account doesn't have permission to access the form</li>
+                    <li>Environment variables are not properly configured</li>
+                </ul>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="info">
+            <strong>{{ responses|length }}</strong> response(s) found
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Submitted At</th>
+                    {% if responses.0.respondent_email %}
+                        <th>Respondent Email</th>
+                    {% endif %}
+                    {% for question in questions %}
+                        <th>{{ question }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for response in responses %}
+                    <tr>
+                        <td class="submitted-at">{{ response.submitted_at|default:"N/A" }}</td>
+                        {% if responses.0.respondent_email %}
+                            <td>{{ response.respondent_email|default:"N/A" }}</td>
+                        {% endif %}
+                        {% for answer in response.answers_list %}
+                            <td>{{ answer|default:"" }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</body>
+</html>
