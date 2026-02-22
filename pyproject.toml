@@ -8,7 +8,12 @@ authors = [
 requires-python = ">=3.14"
 dependencies = [
     "django (>=6.0.2,<7.0.0)",
-    "pydantic (>=2.12.5,<3.0.0)"
+    "pydantic (>=2.12.5,<3.0.0)",
+    "google-api-python-client (>=2.100.0,<3.0.0)",
+    "google-auth (>=2.25.0,<3.0.0)",
+    "google-auth-httplib2 (>=0.2.0,<1.0.0)",
+    "google-auth-oauthlib (>=1.2.0,<2.0.0)",
+    "python-dotenv (>=1.0.0,<2.0.0)"
 ]
 
 
@@ -30,8 +35,8 @@ dev = [
 [tool.ruff]
 target-version = "py314"
 line-length = 88
-select = ["E", "F", "I", "UP", "B"]
-ignore = [
+lint.select = ["E", "F", "I", "UP", "B"]
+lint.ignore = [
     "E501",  # Line too long (handled by formatter)
     "B008",  # Do not perform function calls in argument defaults
 ]
@@ -63,4 +68,6 @@ exclude = [
     "venv/",
     ".venv/",
     "__pycache__/",
+    "src/config/",
+    "src/manage.py",
 ]
