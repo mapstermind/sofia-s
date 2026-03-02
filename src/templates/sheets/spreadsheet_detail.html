@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}{{ spreadsheet.title }} — SOFIA-S{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-3">
+  <div>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-1">
+        <li class="breadcrumb-item"><a href="{% url 'sheets:spreadsheet_list' %}">Spreadsheets</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{ spreadsheet.title }}</li>
+      </ol>
+    </nav>
+    <h1 class="h2 mb-0">{{ spreadsheet.title }}</h1>
+    <p class="text-muted small mt-1">
+      {{ total_responses }} response{{ total_responses|pluralize }}
+      {% if spreadsheet.last_synced_at %}
+        &bull; Last synced {{ spreadsheet.last_synced_at|date:"M j, Y H:i" }} UTC
+      {% endif %}
+    </p>
+  </div>
+  <a href="{% url 'api:spreadsheet_detail' spreadsheet.pk %}?format=csv"
+     class="btn btn-outline-secondary">
+    <i class="fas fa-download me-1"></i>Download CSV
+  </a>
+</div>
+
+{% if responses_with_values %}
+<div class="table-responsive">
+  <table class="table table-striped table-hover table-sm align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">#</th>
+        {% for header in headers %}
+        <th scope="col">{{ header }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for response, values in responses_with_values %}
+      <tr>
+        <td class="text-muted small">{{ response.row_index }}</td>
+        {% for value in values %}
+        <td>{{ value }}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="text-center py-5 text-muted">
+  <i class="fas fa-inbox fa-3x mb-3 d-block"></i>
+  <h4>No responses yet</h4>
+  <p>Sync this spreadsheet from the <a href="/admin/">admin panel</a> or via <code>make sync</code>.</p>
+</div>
+{% endif %}
+{% endblock %}

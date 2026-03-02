@@ -1,8 +1,50 @@
-[project]
+[tool.poetry]
 name = "sofia"
 version = "0.1.0"
-description = ""
-authors = [
-    {name = "Your Name",email = "you@example.com"}
-]
-requires-python = ">=3.12"
+description = "Google Forms Data Aggregation Platform"
+authors = ["Your Name <you@example.com>"]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.12,<4.0"
+django = ">=6.0"
+google-api-python-client = ">=2.0"
+google-auth = ">=2.0"
+google-auth-httplib2 = ">=0.2"
+python-dotenv = ">=1.0"
+gunicorn = ">=21.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.0"
+pytest-django = ">=4.0"
+ruff = ">=0.4"
+mypy = ">=1.10"
+django-stubs = {version = ">=5.0", extras = ["compatible-mypy"]}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.development"
+pythonpath = ["src"]
+testpaths = ["src"]
+
+[tool.ruff]
+src = ["src"]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP"]
+ignore = []
+
+[tool.mypy]
+plugins = ["mypy_django_plugin.main"]
+python_version = "3.12"
+strict = false
+ignore_missing_imports = true
+mypy_path = "src"
+
+[tool.django-stubs]
+django_settings_module = "config.settings.development"

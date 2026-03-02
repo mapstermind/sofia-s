@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.9"
 
 services:
   web:
@@ -8,8 +8,12 @@ services:
     ports:
       - "8000:8000"
     volumes:
+      # Mount source for live reloading in development
       - .:/app
     env_file:
       - .env
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.development
+    # Override CMD to use Django's dev server instead of gunicorn
     command: poetry run python src/manage.py runserver 0.0.0.0:8000
     restart: unless-stopped

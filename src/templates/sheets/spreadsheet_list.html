@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Spreadsheets — SOFIA-S{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h2 mb-0"><i class="fas fa-table me-2"></i>Spreadsheets</h1>
+</div>
+
+{% if spreadsheets %}
+<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4">
+  {% for ss in spreadsheets %}
+  <div class="col">
+    <div class="card h-100 shadow-sm border-0">
+      <div class="card-body">
+        <h5 class="card-title">
+          <a href="{% url 'sheets:spreadsheet_detail' ss.pk %}" class="text-decoration-none stretched-link">
+            {{ ss.title }}
+          </a>
+        </h5>
+        <p class="text-muted small mb-1">
+          <i class="fas fa-file-excel me-1"></i>{{ ss.sheet_name }}
+        </p>
+        <p class="text-muted small mb-1">
+          <i class="fas fa-chart-bar me-1"></i>{{ ss.responses.count }} response{{ ss.responses.count|pluralize }}
+        </p>
+        {% if ss.last_synced_at %}
+        <p class="text-muted small mb-0">
+          <i class="fas fa-rotate me-1"></i>Synced {{ ss.last_synced_at|date:"M j, Y H:i" }} UTC
+        </p>
+        {% else %}
+        <p class="text-muted small mb-0">
+          <i class="fas fa-clock me-1"></i>Never synced
+        </p>
+        {% endif %}
+      </div>
+      <div class="card-footer bg-transparent border-0 pt-0">
+        <a href="{% url 'api:spreadsheet_detail' ss.pk %}?format=csv"
+           class="btn btn-sm btn-outline-secondary position-relative z-1"
+           style="z-index:1">
+          <i class="fas fa-download me-1"></i>CSV
+        </a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-5 text-muted">
+  <i class="fas fa-table fa-3x mb-3 d-block"></i>
+  <h4>No spreadsheets configured yet</h4>
+  <p>Add spreadsheets via the <a href="/admin/">admin panel</a>.</p>
+</div>
+{% endif %}
+{% endblock %}

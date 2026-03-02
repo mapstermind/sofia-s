@@ -1,54 +1,66 @@
-.PHONY: help install run migrate makemigrations test lint format typecheck shell
+.PHONY: help install run migrate makemigrations test lint format typecheck shell \
+        sync collectstatic docker-up docker-down docker-build
 
-# Default target
-help:
-	@echo "Available commands:"
-	@echo "  install      - Install dependencies using poetry"
-	@echo "  run          - Run Django development server"
-	@echo "  migrate      - Run Django migrations"
-	@echo "  makemigrations - Create new Django migrations"
-	@echo "  test         - Run tests using pytest"
-	@echo "  lint         - Run ruff linter"
-	@echo "  format       - Run ruff formatter"
-	@echo "  typecheck    - Run mypy type checker"
-	@echo "  shell        - Open Django shell"
-	@echo "  help         - Show this help message"
-
-# Path to manage.py (can be overridden if needed)
 MANAGE := src/manage.py
 
-# Install dependencies
+help:
+	@echo ""
+	@echo "SOFIA-S — available make targets"
+	@echo "---------------------------------"
+	@echo "  install          Install dependencies (poetry install)"
+	@echo "  run              Start Django development server"
+	@echo "  migrate          Apply database migrations"
+	@echo "  makemigrations   Generate new migration files"
+	@echo "  test             Run the test suite (pytest)"
+	@echo "  lint             Lint with ruff"
+	@echo "  format           Format with ruff"
+	@echo "  typecheck        Type-check with mypy"
+	@echo "  shell            Open Django interactive shell"
+	@echo "  sync             Sync all active spreadsheets from Google Sheets"
+	@echo "  collectstatic    Collect static files"
+	@echo "  docker-build     Build Docker image"
+	@echo "  docker-up        Start containers (docker-compose up -d)"
+	@echo "  docker-down      Stop containers (docker-compose down)"
+	@echo ""
+
 install:
 	poetry install
 
-# Run Django development server
 run:
 	poetry run python $(MANAGE) runserver
 
-# Run migrations
 migrate:
 	poetry run python $(MANAGE) migrate
 
-# Create migrations
 makemigrations:
 	poetry run python $(MANAGE) makemigrations
 
-# Run tests
 test:
 	poetry run pytest
 
-# Run linter
 lint:
-	poetry run ruff check
+	poetry run ruff check src/
 
-# Run formatter
 format:
-	poetry run ruff format
+	poetry run ruff format src/
 
-# Run type checker
 typecheck:
-	poetry run mypy
+	poetry run mypy src/
 
-# Open Django shell
 shell:
 	poetry run python $(MANAGE) shell
+
+sync:
+	poetry run python $(MANAGE) sync_sheets --all
+
+collectstatic:
+	poetry run python $(MANAGE) collectstatic --noinput
+
+docker-build:
+	docker build -t sofia-s .
+
+docker-up:
+	docker-compose up -d
+
+docker-down:
+	docker-compose down

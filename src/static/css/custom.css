@@ -1,0 +1,36 @@
+/* SOFIA-S Custom Styles */
+
+body {
+  background-color: #f5f7fa;
+  font-size: 0.9375rem;
+}
+
+/* Navbar */
+.navbar-brand {
+  letter-spacing: 0.03em;
+}
+
+/* Cards */
+.card {
+  border-radius: 0.625rem;
+}
+
+/* Tables */
+.table th {
+  white-space: nowrap;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table td {
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Auth pages */
+.card.shadow {
+  border: none;
+}

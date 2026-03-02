@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — SOFIA-S{% endblock %}
+
+{% block content %}
+<h1 class="h2 mb-4"><i class="fas fa-gauge-high me-2"></i>Dashboard</h1>
+
+<div class="row g-4 mb-4">
+  <div class="col-sm-6 col-lg-3">
+    <div class="card text-white bg-primary shadow border-0 h-100">
+      <div class="card-body d-flex justify-content-between align-items-center">
+        <div>
+          <div class="text-uppercase small fw-semibold mb-1">Active Spreadsheets</div>
+          <div class="display-6 fw-bold">{{ spreadsheets|length }}</div>
+        </div>
+        <i class="fas fa-table fa-2x opacity-50"></i>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-lg-3">
+    <div class="card text-white bg-success shadow border-0 h-100">
+      <div class="card-body d-flex justify-content-between align-items-center">
+        <div>
+          <div class="text-uppercase small fw-semibold mb-1">Total Responses</div>
+          <div class="display-6 fw-bold">{{ total_responses }}</div>
+        </div>
+        <i class="fas fa-chart-bar fa-2x opacity-50"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if spreadsheets %}
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card shadow border-0">
+      <div class="card-header bg-white border-bottom">
+        <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Responses by Spreadsheet</h5>
+      </div>
+      <div class="card-body">
+        <canvas id="responsesChart"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="card shadow border-0">
+      <div class="card-header bg-white border-bottom">
+        <h5 class="mb-0"><i class="fas fa-list me-2"></i>Spreadsheets</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        {% for ss in spreadsheets %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <a href="{% url 'sheets:spreadsheet_detail' ss.pk %}" class="text-decoration-none text-truncate me-2">
+            {{ ss.title }}
+          </a>
+          <span class="badge bg-primary rounded-pill">{{ ss.response_count }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="text-center py-5 text-muted">
+  <i class="fas fa-table fa-3x mb-3 d-block"></i>
+  <h4>No spreadsheets configured yet</h4>
+  <p>Add one via the <a href="/admin/">admin panel</a>.</p>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const chartData = {{ chart_data_json|safe }};
+  initResponsesChart('responsesChart', chartData);
+</script>
+{% endblock %}
