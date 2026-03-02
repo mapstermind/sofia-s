@@ -122,27 +122,3 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
-
-
-# Google Forms Integration Settings
-GOOGLE_APPLICATION_CREDENTIALS = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", "")
-GOOGLE_FORM_ID = os.getenv("GOOGLE_FORM_ID", "")
-FORMS_CACHE_SECONDS = int(os.getenv("FORMS_CACHE_SECONDS", "60"))
-
-# Logging configuration for Google Forms API
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-        },
-    },
-    "loggers": {
-        "form_responses": {
-            "handlers": ["console"],
-            "level": "INFO",
-            "propagate": True,
-        },
-    },
-}
